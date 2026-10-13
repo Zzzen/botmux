@@ -25,14 +25,24 @@ describe('Kimi managed K3 reasoning efforts', () => {
 });
 
 describe('Codex model-aware reasoning efforts', () => {
-  it('exposes six levels only for sol and terra', () => {
-    expect(codexReasoningEffortsForModel('gpt-5.6-sol')).toContain('ultra');
-    expect(codexReasoningEffortsForModel('gpt-5.6-terra')).toContain('ultra');
+  it('offers ultra for supported GPT-6 and GPT-5.6 models on both Codex clients', () => {
+    for (const model of ['gpt-6.1-sol', 'gpt-6-astra', 'gpt-6-sol', 'gpt-5.6-sol', 'gpt-5.6-terra']) {
+      expect(codexReasoningEffortsForModel(model)).toEqual(['low', 'medium', 'high', 'xhigh', 'max', 'ultra']);
+      for (const cliId of ['codex', 'codex-app']) {
+        expect(cliModelSupportsReasoningEffort(cliId, model, 'ultra')).toBe(true);
+      }
+    }
+    expect(codexReasoningEffortsForModel(' GPT-6-Astra ')).toContain('ultra');
   });
 
-  it('allows max but not ultra for luna', () => {
-    expect(codexModelSupportsReasoningEffort('gpt-5.6-luna', 'max')).toBe(true);
-    expect(codexModelSupportsReasoningEffort('gpt-5.6-luna', 'ultra')).toBe(false);
+  it('allows max but not ultra for Luna', () => {
+    for (const model of ['gpt-6-luna', 'gpt-5.6-luna']) {
+      expect(codexReasoningEffortsForModel(model)).toEqual(['low', 'medium', 'high', 'xhigh', 'max']);
+      expect(codexModelSupportsReasoningEffort(model, 'max')).toBe(true);
+      for (const cliId of ['codex', 'codex-app']) {
+        expect(cliModelSupportsReasoningEffort(cliId, model, 'ultra')).toBe(false);
+      }
+    }
   });
 
   it('fails closed to the four-level common intersection for unknown models', () => {

@@ -31,7 +31,10 @@ describe('staticModelChoices（静态候选，shell-free）', () => {
 
   it('codex 返回其静态候选', () => {
     const models = staticModelChoices('codex');
-    expect(models).toEqual(['gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2']);
+    expect(models).toEqual([
+      'gpt-6.1-sol', 'gpt-6-astra', 'gpt-6-sol', 'gpt-6-luna',
+      'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2',
+    ]);
   });
 
   it('codex-app 与 codex 共享同一模型目录快照', () => {
